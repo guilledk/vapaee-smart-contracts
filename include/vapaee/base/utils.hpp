@@ -144,5 +144,15 @@ namespace vapaee {
         static inline checksum256 hash(std::string s) {
             return sha256(const_cast<char*>(s.c_str()), s.size());
         }
+
+        static inline uint32_t rand_range(uint64_t seed, uint32_t to) {
+            checksum256 hash = sha256((char *)&seed, sizeof(seed));
+
+            uint32_t aux;
+            memcpy(&aux, &hash, sizeof(aux));
+
+            uint32_t result = (uint32_t)(aux % to);
+            return result;
+        }
     }; // namespace utils
 }; // namespace vaapee

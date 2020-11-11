@@ -39,7 +39,10 @@ namespace vapaee {
     namespace token {
         static name contract = eosio::name("vapaeetokens");
     };
-    namespace utils {}
+    namespace captcha {
+        static name contract = eosio::name("captchatools");
+    };
+    namespace utils {};
 };
 
 using namespace vapaee;
@@ -51,6 +54,7 @@ using namespace tprofile;
 using namespace author;
 using namespace style;
 using namespace token;
+using namespace captcha;
 using namespace utils;
 
 #include <vapaee/base/slug.hpp>
