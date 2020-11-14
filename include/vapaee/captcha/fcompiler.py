@@ -37,7 +37,7 @@ if __name__ == '__main__':
 	x_delta = int(total_width / tile_size)
 
 	max_chunk = 4
-	stop_char = 4
+	stop_chunk = [0, 0]
 
 	glyphs = []
 
@@ -45,6 +45,7 @@ if __name__ == '__main__':
 		return 0 if pixel == (0, 0, 0) else 1
 
 	# outer fors iterate through the glyphs
+	total_chunks = 0
 	for y in range(y_delta):
 		for x in range(x_delta):
 			glyph_data = []
@@ -75,6 +76,7 @@ if __name__ == '__main__':
 						nonzero = True
 
 					glyph_data.append(cur_chunk)
+					total_chunks += 1
 
 			if nonzero:
 				assert len(glyph_data)
@@ -91,7 +93,7 @@ if __name__ == '__main__':
 		tab = '    '
 
 	font_matrix_size = len(glyphs)
-	glyph_data_size = tile_size * tile_size
+	glyph_data_size = total_chunks + font_matrix_size
 
 	with open(out_path, 'w') as out_file:
 		out_file.write('#ifndef _FONT_MATRIX_H_\n')
@@ -99,9 +101,7 @@ if __name__ == '__main__':
 		out_file.write('\n')
 		out_file.write(f'#define FONT_MATRIX_SIZE {font_matrix_size}\n')
 		out_file.write(f'#define GLYPH_TILE_SIZE {tile_size}\n')
-		out_file.write(f'#define GLYPH_MAX_CHUNK {max_chunk}\n')
-		out_file.write('#define GLYPH_DATA_SIZE (GLYPH_MAX_CHUNK * GLYPH_TILE_SIZE)\n')
-		out_file.write(f'#define GLYPH_STOP {stop_char}\n')
+		out_file.write(f'#define GLYPH_DATA_SIZE {glyph_data_size}\n')
 		out_file.write('\n')
 		out_file.write('typedef struct {\n')
 		out_file.write('    uint8_t value;\n')
@@ -109,29 +109,35 @@ if __name__ == '__main__':
 		out_file.write('} glyph_chunk;\n')
 		out_file.write('\n')
 		out_file.write(
-			'glyph_chunk font_matrix[FONT_MATRIX_SIZE][GLYPH_DATA_SIZE] = {\n'
+			'glyph_chunk font_matrix[GLYPH_DATA_SIZE] = {\n'
 		)
 
-		for glyph_num, glyph_data in enumerate(glyphs):
-			out_file.write(f'{tab}{{')
+		jump_table = []
+		i = 0
+		for glyph_data in glyphs:
+			out_file.write(tab)
 
-			i = 0
-			while i < (tile_size * max_chunk):
-				if i < len(glyph_data):
-					out_file.write(f'{{{glyph_data[i][0]},{glyph_data[i][1]}}}')
-				else:
-					out_file.write(f'{{{stop_char},20}}')
+			jump_table.append(i)
 
+			for chunk in glyph_data:
+				out_file.write(f'{{{chunk[0]},{chunk[1]}}},')
 				i += 1
-				if i < (tile_size * max_chunk):
-					out_file.write(',')
 
-			out_file.write('}')
-			if glyph_num < len(glyphs):
+			out_file.write('{0,0},\n')
+			i += 1
+
+		out_file.write('};\n')
+		out_file.write('\n')
+		out_file.write(
+			'int font_jmp_table[FONT_MATRIX_SIZE] = {\n'
+		)
+		for i, ptr in enumerate(jump_table):
+			out_file.write(f'{tab}{ptr}')
+			if i < (len(jump_table) - 1):
 				out_file.write(',')
-			
 			out_file.write('\n')
 
 		out_file.write('};\n')
+
 		out_file.write('\n')
 		out_file.write('#endif //_FONT_MATRIX_H_\n')
