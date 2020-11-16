@@ -1,6 +1,6 @@
 #pragma once
 
-#define CHALLENGE_CHARS 4
+#define CHALLENGE_CHARS 5
 
 #define CHALLANGE_WIDTH 80
 #define CHALLANGE_HEIGHT 20

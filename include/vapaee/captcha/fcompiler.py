@@ -129,7 +129,7 @@ if __name__ == '__main__':
 		out_file.write('};\n')
 		out_file.write('\n')
 		out_file.write(
-			'int font_jmp_table[FONT_MATRIX_SIZE] = {\n'
+			'uint32_t font_jmp_table[FONT_MATRIX_SIZE] = {\n'
 		)
 		for i, ptr in enumerate(jump_table):
 			out_file.write(f'{tab}{ptr}')
