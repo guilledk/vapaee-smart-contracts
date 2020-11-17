@@ -42,6 +42,9 @@ namespace vapaee {
     namespace captcha {
         static name contract = eosio::name("captchatools");
     };
+    namespace rng {
+        static name contract = eosio::name("rngprovider");
+    };
     namespace utils {};
 };
 
@@ -55,6 +58,7 @@ using namespace author;
 using namespace style;
 using namespace token;
 using namespace captcha;
+using namespace rng;
 using namespace utils;
 
 #include <vapaee/base/slug.hpp>

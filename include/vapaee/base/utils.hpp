@@ -154,5 +154,10 @@ namespace vapaee {
             uint32_t result = (uint32_t)(aux % to);
             return result;
         }
+
+
+        TABLE numericstate {
+            uint64_t counter;
+        };
     }; // namespace utils
 }; // namespace vaapee

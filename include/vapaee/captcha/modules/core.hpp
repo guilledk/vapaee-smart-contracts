@@ -29,7 +29,7 @@ namespace vapaee {
                 uint8_t current_x_pos = 0;
                 uint8_t current_y_pos = (CHALLANGE_HEIGHT / 2) - (GLYPH_TILE_SIZE / 2);
                 for (int i = 0; i < CHALLENGE_CHARS; i++) {
-                    glyph_cpy(i + 40, render, current_x_pos, current_y_pos);
+                    glyph_cpy(i + 1, render, current_x_pos, current_y_pos);
                     current_x_pos += GLYPH_TILE_SIZE + 1;
                 }
                 print(render);

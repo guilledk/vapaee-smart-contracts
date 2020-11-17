@@ -13,8 +13,6 @@ namespace vapaee {
         public:
             using contract::contract;
 
-        public:
-
             ACTION amihuman(name user) {
                 core::action_am_i_human(user);
             }
