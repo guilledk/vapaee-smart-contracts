@@ -6,24 +6,34 @@ namespace vapaee {
     namespace tprofile {
         namespace prof {
 
-            template <typename iter_t>
-            name signed_by_any_owner(iter_t& prof_iter) {
-                for(auto owner : prof_iter->owners) {
+            template <typename T>
+            name signed_by_any_owner(T& prof_it) {
+                print("pid:", prof_it->id, "\n");
+                for(auto owner : prof_it->owners) {
                     if (has_auth(owner))
                         return owner;
                 }
                 return "null"_n;
             }
 
+            auto get_profile(string alias) {
+                 profiles prof_table(contract, contract.value);
+
+                auto alias_index = prof_table.get_index<"alias"_n>();
+                auto prof_it = alias_index.find(vapaee::utils::hash(alias));
+                optional<decltype(prof_it)> option;
+                if (prof_it != alias_index.end())
+                    option = make_optional(prof_it);
+
+                return option;
+            }
+
             void action_add_profile(name owner, string alias) {
                 require_auth(owner);
 
+                check_empty(get_profile(alias), "identical profile exists");
+
                 profiles prof_table(contract, contract.value);
-
-                auto alias_index = prof_table.get_index<"alias"_n>();
-                auto profile_iter = alias_index.find(vapaee::utils::hash(alias));
-                check(profile_iter == alias_index.end(), "identical profile exists");
-
                 prof_table.emplace(owner, [&](auto& row) {
                     row.id = prof_table.available_primary_key();
                     row.owners.push_back(owner);
@@ -33,19 +43,16 @@ namespace vapaee {
             }
 
             void action_chg_profile(string old_alias, string new_alias) {
-                profiles prof_table(contract, contract.value);
+                auto prof_it = check_value(get_profile(old_alias), "profile not found");
 
-                auto alias_index = prof_table.get_index<"alias"_n>();
-                auto profile_iter = alias_index.find(vapaee::utils::hash(old_alias));
-                check(profile_iter != alias_index.end(), "profile not found");
-
-                name owner = signed_by_any_owner<decltype(profile_iter)>(profile_iter);
+                name owner = signed_by_any_owner(prof_it);
                 check(owner != "null"_n, "not authorized");
 
-                auto newprofile_iter = alias_index.find(vapaee::utils::hash(new_alias));
-                check(newprofile_iter == alias_index.end(), "identical profile exists");
-
-                alias_index.modify(profile_iter, owner, [&](auto& row) {
+                check_empty(get_profile(new_alias), "identical profile exists");
+  
+                profiles prof_table(contract, contract.value);
+                auto alias_index = prof_table.get_index<"alias"_n>();
+                alias_index.modify(prof_it, owner, [&](auto& row) {
                     row.alias = new_alias;
                 });
             }

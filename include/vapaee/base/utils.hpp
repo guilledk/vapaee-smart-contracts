@@ -166,5 +166,17 @@ namespace vapaee {
                 token[i] = CHARSET[prng_range(i, CHARSET_SIZE)];
             return token;
         }
+
+        template<typename T>
+        T check_value(optional<T> option, const char* msg) {
+            check(option.has_value(), msg);
+            return option.value();
+        }
+
+        template<typename T>
+        void check_empty(optional<T> option, const char* msg) {
+            check(!option.has_value(), msg);
+        }
+
     }; // namespace utils
 }; // namespace vaapee
