@@ -8,7 +8,6 @@ namespace vapaee {
 
             template <typename T>
             name signed_by_any_owner(T& prof_it) {
-                print("pid:", prof_it->id, "\n");
                 for(auto owner : prof_it->owners) {
                     if (has_auth(owner))
                         return owner;
@@ -17,13 +16,13 @@ namespace vapaee {
             }
 
             auto get_profile(string alias) {
-                 profiles prof_table(contract, contract.value);
+                profiles prof_table(contract, contract.value);
 
                 auto alias_index = prof_table.get_index<"alias"_n>();
                 auto prof_it = alias_index.find(vapaee::utils::hash(alias));
-                optional<decltype(prof_it)> option;
+                optional<reference_wrapper<decltype(prof_it)>> option;
                 if (prof_it != alias_index.end())
-                    option = make_optional(prof_it);
+                    option = make_optional(ref(prof_it));
 
                 return option;
             }
@@ -44,8 +43,8 @@ namespace vapaee {
 
             void action_chg_profile(string old_alias, string new_alias) {
                 auto prof_it = check_value(get_profile(old_alias), "profile not found");
-
-                name owner = signed_by_any_owner(prof_it);
+                
+                name owner = signed_by_any_owner(prof_it.get());
                 check(owner != "null"_n, "not authorized");
 
                 check_empty(get_profile(new_alias), "identical profile exists");
