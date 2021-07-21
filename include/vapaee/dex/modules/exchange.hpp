@@ -116,7 +116,7 @@ namespace vapaee {
                     action(
                         permission_level{contract,name("active")},
                         contract,
-                        name("withdraw"),
+                        name("withdrawdex"),
                         std::make_tuple(owner, return_real_amount, itr->client)
                     ).send();
                     aux_trigger_event(return_real_amount.symbol.code(), name("withdraw"), owner, contract, return_real_amount, _asset, _asset);
@@ -520,7 +520,7 @@ namespace vapaee {
                         action(
                             permission_level{contract,name("active")},
                             contract,
-                            name("withdraw"),
+                            name("withdrawdex"),
                             std::make_tuple(maker, maker_gains_real,  maker_client)
                         ).send();
                         aux_trigger_event(maker_gains_real.symbol.code(), name("withdraw"), maker, contract, maker_gains_real, _asset, _asset);
@@ -530,7 +530,7 @@ namespace vapaee {
                         action(
                             permission_level{contract,name("active")},
                             contract,
-                            name("withdraw"),
+                            name("withdrawdex"),
                             std::make_tuple(taker, taker_gains_real, taker_client)
                         ).send();
                         aux_trigger_event(taker_gains_real.symbol.code(), name("withdraw"), taker, contract, taker_gains_real, _asset, _asset);    

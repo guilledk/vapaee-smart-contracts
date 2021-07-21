@@ -75,7 +75,7 @@ namespace vapaee {
                 action(
                     permission_level{contract,name("active")},
                     contract,
-                    name("withdraw"),
+                    name("withdrawdex"),
                     std::make_tuple(owner, return_amount_real, client)
                 ).send();
                 vapaee::dex::record::aux_trigger_event(return_amount_real.symbol.code(), name("withdraw"), owner, contract, return_amount_real, _asset, _asset);

@@ -1,7 +1,8 @@
 #include "./_aux.hpp"
 
+
 // scope: singleton
-TABLE state {
+struct [[eosio::table]] state {
     asset maker_fee;
     asset taker_fee;
     int hprune;  // amount of days in which a HISTORY entry must be considered expired and must be removed 
@@ -35,4 +36,6 @@ TABLE state {
     uint64_t next_market; // id of the next market
     AUX_DEBUG_CODE(uint32_t time_offset;)
 };
+
 typedef singleton<name("state"), state> global_state_singleton;
+

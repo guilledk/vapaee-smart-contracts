@@ -45,7 +45,7 @@ class TelosBookDEX(SmartContract):
         global _did_init
         if not _did_init:
             ec, _ = self.push_action(
-                'init',
+                'initdex',
                 [],
                 f'{self.contract_name}@active'
             )
@@ -356,7 +356,7 @@ class TelosBookDEX(SmartContract):
         return self.get_table(market_id, 'historyblock')
 
     def get_events(self):
-        return self.get_table(self.contract_name, 'events')
+        return self.get_table(self.contract_name, 'dexevents')
 
     def init_test_token(
         self,
@@ -400,7 +400,7 @@ class TelosBookDEX(SmartContract):
     def get_ballots(self):
         return self.get_table(
             self.contract_name,
-            'ballots'
+            'dexballots'
         )
 
     def get_ballot_by_feepayer(self, feepayer: str):

@@ -17,6 +17,8 @@ using std::max;
 
 namespace vapaee {
     namespace dex {
+    
+        #include <vapaee/dex/tables/stat.hpp>
 
         using namespace error;
 

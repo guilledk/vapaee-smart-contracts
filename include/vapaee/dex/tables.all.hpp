@@ -13,7 +13,7 @@
 #include "./tables/ordersummary.hpp"
 #include "./tables/points.hpp"
 #include "./tables/sellorders.hpp"
-#include "./tables/stat.hpp"
+//#include "./tables/stat.hpp"
 #include "./tables/state.hpp"
 #include "./tables/last24hs.hpp"
 #include "./tables/tokendata.hpp"
